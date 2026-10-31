@@ -1,0 +1,311 @@
+/* Gene Explorer: retro pixel-art meets lab notebook.
+   Base colours are fixed everywhere: A green, T red, G yellow, C blue. */
+
+:root {
+  --bg: #0f1220;
+  --panel: #1a1f36;
+  --panel-2: #232949;
+  --border: #3a4170;
+  --text: #e8ecff;
+  --muted: #9aa3d0;
+
+  --base-A: #4ade80;
+  --base-T: #ff5d5d;
+  --base-G: #ffd43b;
+  --base-C: #4da3ff;
+
+  /* Amino acid classes use different hues from the bases on purpose */
+  --aa-nonpolar: #ff9f43;
+  --aa-polar: #2dd4bf;
+  --aa-basic: #a78bfa;
+  --aa-acidic: #f472b6;
+
+  --pixel-font: "Press Start 2P", ui-monospace, monospace;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.5;
+  /* room for the fixed bottom nav */
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+.pixel { font-family: var(--pixel-font); font-weight: normal; letter-spacing: 0; }
+
+a { color: var(--base-C); }
+
+/* ---------- top bar ---------- */
+.top-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 4px solid var(--border);
+  background: var(--panel);
+  position: sticky; top: 0; z-index: 5;
+}
+.top-bar h1 { font-size: 13px; margin: 0; flex: 1; }
+.logo-icon svg { width: 24px; height: 36px; display: block; }
+.about-link {
+  min-width: 44px; min-height: 44px; display: grid; place-items: center;
+  font-family: var(--pixel-font); font-size: 14px; text-decoration: none;
+  color: var(--text); border: 3px solid var(--border); background: var(--panel-2);
+}
+
+main { max-width: 640px; margin: 0 auto; padding: 16px; }
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ---------- panels ---------- */
+.panel {
+  background: var(--panel);
+  border: 3px solid var(--border);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.panel h2 { font-size: 13px; margin: 0 0 14px; line-height: 1.6; }
+.panel h3 { font-size: 13px; margin: 18px 0 6px; color: var(--base-G); }
+.note { color: var(--muted); font-size: 13px; }
+.warn { color: var(--base-G); font-size: 13px; }
+.error { color: var(--base-T); font-size: 14px; }
+
+/* ---------- buttons: chunky, press down when tapped ---------- */
+.btn {
+  font-family: var(--pixel-font); font-size: 11px;
+  min-height: 48px; padding: 12px 16px;
+  color: #0f1220; background: var(--base-A);
+  border: 3px solid #0f1220;
+  box-shadow: 0 5px 0 #1f7a43, 0 0 0 3px var(--base-A);
+  margin: 4px 3px 12px;
+  cursor: pointer;
+}
+.btn:active { transform: translateY(5px); box-shadow: 0 0 0 #1f7a43, 0 0 0 3px var(--base-A); }
+.btn.secondary {
+  background: var(--panel-2); color: var(--text);
+  box-shadow: 0 5px 0 #0a0c18, 0 0 0 3px var(--border);
+}
+.btn.secondary:active { box-shadow: 0 0 0 #0a0c18, 0 0 0 3px var(--border); }
+
+/* ---------- inputs ---------- */
+label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+.text-input, .select, textarea {
+  width: 100%; min-height: 44px; padding: 8px 10px;
+  font-family: var(--mono); font-size: 16px; /* 16px stops iOS zooming on focus */
+  color: var(--text); background: var(--bg);
+  border: 3px solid var(--border); border-radius: 0;
+}
+.text-input:focus, .select:focus, textarea:focus { outline: none; border-color: var(--base-C); }
+.text-input:disabled { opacity: 0.5; }
+.input-row { display: flex; gap: 8px; }
+.input-row .text-input { flex: 1 1 auto; min-width: 0; }
+.input-row .select { flex: 0 0 96px; width: 96px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.chip {
+  min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px;
+  border: 3px solid var(--border); background: var(--panel-2);
+  color: var(--text); font-family: var(--mono); font-size: 14px; cursor: pointer;
+}
+.chip.disabled { opacity: 0.5; cursor: default; }
+.chip.active { border-color: var(--base-G); color: var(--base-G); }
+
+.segmented { display: flex; margin-bottom: 16px; }
+.seg-btn {
+  flex: 1; min-height: 48px; font-family: var(--pixel-font); font-size: 10px;
+  color: var(--muted); background: var(--panel); border: 3px solid var(--border);
+  cursor: pointer;
+}
+.seg-btn.active { color: var(--bg); background: var(--base-C); border-color: var(--base-C); }
+
+/* ---------- toolkit tiles ---------- */
+.tile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tile {
+  min-height: 130px; padding: 14px 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: var(--panel); border: 3px solid var(--border);
+  box-shadow: 0 5px 0 #0a0c18;
+  color: var(--text); font-family: var(--pixel-font); font-size: 10px; line-height: 1.6;
+  text-align: center; cursor: pointer;
+}
+.tile:active { transform: translateY(5px); box-shadow: none; }
+.tile svg { width: 48px; height: 48px; }
+
+.back-btn { margin: 0 0 12px; }
+
+/* ---------- calculator output ---------- */
+.formula {
+  font-size: 18px; text-align: center; padding: 10px;
+  background: var(--bg); border: 3px dashed var(--border); margin-bottom: 8px;
+}
+.result {
+  margin-top: 8px; padding: 14px;
+  background: var(--bg); border: 3px solid var(--base-A);
+}
+.result.bad { border-color: var(--base-T); }
+.result .answer { font-size: 20px; color: var(--base-A); word-break: break-word; }
+.result h3 { margin-top: 14px; }
+.steps { padding-left: 22px; margin: 6px 0 0; }
+.steps li { margin-bottom: 6px; word-break: break-word; }
+
+/* ---------- bases and sequences ---------- */
+.b-A { color: var(--base-A); } .b-T, .b-U { color: var(--base-T); }
+.b-G { color: var(--base-G); } .b-C { color: var(--base-C); }
+.codon { font-weight: bold; letter-spacing: 1px; }
+
+/* ---------- codon table ---------- */
+.base-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.base-tab {
+  min-height: 48px; font-family: var(--pixel-font); font-size: 14px;
+  background: var(--panel); border: 3px solid var(--border); cursor: pointer;
+}
+.base-tab.active { background: var(--panel-2); }
+.codon-grid { display: grid; grid-template-columns: 28px repeat(4, 1fr); gap: 4px; margin-bottom: 12px; }
+.codon-grid .axis { display: grid; place-items: center; font-family: var(--pixel-font); font-size: 12px; min-height: 28px; }
+.codon-btn {
+  min-height: 48px; padding: 2px; background: var(--panel); border: 3px solid var(--border);
+  font-family: var(--mono); font-size: 13px; line-height: 1.25; color: var(--text); cursor: pointer;
+}
+.codon-btn small { display: block; color: var(--muted); font-size: 11px; }
+.codon-btn.dim { opacity: 0.3; }
+.codon-btn.hit { border-color: var(--base-G); background: var(--panel-2); }
+.codon-btn.sel { border-color: var(--text); }
+.aa-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.aa-chip { min-width: 44px; min-height: 44px; padding: 0 6px; border: 3px solid var(--border); background: var(--panel);
+  font-family: var(--mono); font-size: 15px; font-weight: bold; color: var(--text); cursor: pointer; }
+.aa-chip.active { border-color: var(--base-G); color: var(--base-G); }
+
+/* ---------- amino acid cards ---------- */
+.aa-card { background: var(--panel); border: 3px solid var(--border); border-left-width: 10px; padding: 12px; margin-bottom: 12px; }
+.aa-card.nonpolar { border-left-color: var(--aa-nonpolar); }
+.aa-card.polar { border-left-color: var(--aa-polar); }
+.aa-card.basic { border-left-color: var(--aa-basic); }
+.aa-card.acidic { border-left-color: var(--aa-acidic); }
+.aa-head { display: flex; align-items: center; gap: 12px; }
+.aa-letter { font-family: var(--pixel-font); font-size: 28px; width: 40px; text-align: center; }
+.aa-name { font-weight: bold; font-size: 16px; }
+.aa-sub { color: var(--muted); font-size: 13px; }
+.aa-detail { margin-top: 8px; font-size: 14px; }
+
+/* ---------- bottom navigation ---------- */
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  display: flex; background: var(--panel); border-top: 4px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-nav a {
+  flex: 1; min-height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  text-decoration: none; color: var(--muted); font-size: 8px;
+}
+.bottom-nav a .nav-icon { font-size: 18px; line-height: 1; }
+.bottom-nav a.active { color: var(--base-G); background: var(--panel-2); }
+
+/* ---------- Phase 2: explore ---------- */
+.result-row {
+  display: block; padding: 12px; margin-bottom: 10px; min-height: 56px;
+  background: var(--panel); border: 3px solid var(--border); border-left: 10px solid var(--base-C);
+  color: var(--text); text-decoration: none;
+}
+.result-row:active { background: var(--panel-2); }
+
+/* Loading bar that fills like a health bar, in chunky steps */
+.loadbar { height: 20px; border: 3px solid var(--border); background: var(--bg); margin: 8px 0 4px; }
+.loadbar-fill { height: 100%; background: var(--base-A); transition: width 0.6s steps(10); }
+
+.facts { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.facts th, .facts td { text-align: left; vertical-align: top; padding: 6px 8px 6px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+.facts th { color: var(--muted); font-weight: normal; width: 42%; }
+.plain-list { padding-left: 18px; margin: 4px 0; }
+.plain-list li { margin-bottom: 6px; font-size: 14px; }
+details summary { cursor: pointer; color: var(--base-C); min-height: 32px; }
+
+/* "What does this mean?" term buttons */
+.term {
+  font: inherit; color: var(--base-C); background: none; border: none;
+  border-bottom: 2px dotted var(--base-C); padding: 6px 0; margin: 0; cursor: pointer; text-align: left;
+}
+.sheet { position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.6); display: flex; align-items: flex-end; }
+.sheet[hidden] { display: none; }
+.sheet-box { width: 100%; max-width: 640px; margin: 0 auto; background: var(--panel); border-top: 4px solid var(--base-G);
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); }
+.sheet-box h3 { font-size: 12px; color: var(--base-G); line-height: 1.6; margin: 0 0 10px; }
+
+/* Swipeable panels: side by side, snapping to each one */
+.panels { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0; -webkit-overflow-scrolling: touch; }
+.panel-slide { flex: 0 0 100%; scroll-snap-align: start; min-width: 0; }
+.panel-tabs { margin-top: 4px; }
+
+.seq { font-size: 13px; line-height: 1.8; word-break: break-all; background: var(--bg); border: 3px solid var(--border); padding: 10px; margin: 8px 0; max-height: 320px; overflow-y: auto; }
+.start-codon { background: rgba(74, 222, 128, 0.35); outline: 1px solid var(--base-A); }
+.stop-codon { background: rgba(255, 93, 93, 0.35); outline: 1px solid var(--base-T); }
+.match-ok { color: var(--base-A); font-size: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; margin-bottom: 6px; }
+.aa-nonpolar { color: var(--aa-nonpolar); } .aa-polar { color: var(--aa-polar); }
+.aa-basic { color: var(--aa-basic); } .aa-acidic { color: var(--aa-acidic); } .aa-other { color: var(--muted); }
+
+/* ---------- CDS strand view ---------- */
+.view-switch { margin: 8px 0 0; }
+.view-switch .seg-btn { min-height: 44px; }
+.strand-scroll {
+  height: 420px; overflow-y: auto; margin: 8px 0;
+  background: var(--bg); border: 3px solid var(--border);
+  overscroll-behavior: contain;   /* reaching the end doesn't scroll the whole page */
+}
+.strand-scroll canvas { display: block; position: sticky; top: 0; cursor: pointer; }
+.strand-info { min-height: 44px; font-size: 14px; color: var(--text); }
+.strand-modes { margin: 8px 0 0; }
+.strand-modes .seg-btn { min-height: 44px; font-size: 9px; }
+.strand-info p { margin: 8px 0; }
+.mut-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.mut-row > span { width: 92px; color: var(--muted); font-size: 13px; }
+.base-btn {
+  width: 44px; height: 44px; font-family: var(--mono); font-size: 18px; font-weight: bold;
+  background: var(--panel-2); border: 3px solid var(--border); cursor: pointer;
+  box-shadow: 0 4px 0 #0a0c18;
+}
+.base-btn:active { transform: translateY(4px); box-shadow: none; }
+.del-btn { margin: 0; min-height: 44px; }
+.mut-result .answer { font-size: 18px; }
+.notation { font-size: 15px; }
+.primer-guide { background: var(--panel-2); border: 3px solid var(--border); padding: 8px 12px; margin: 8px 0; font-size: 14px; }
+.primer-guide summary { font-weight: bold; }
+.primer-step { color: var(--base-G); font-size: 14px; }
+
+/* ---------- Phase 3 ---------- */
+/* Pixel font served from the app itself, so it works offline */
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("../assets/fonts/press-start-2p-latin.woff2") format("woff2");
+  font-display: swap;
+}
+.sound-btn {
+  min-width: 44px; min-height: 44px; padding: 0 8px; font-size: 8px;
+  color: var(--base-A); background: var(--panel-2); border: 3px solid var(--border); cursor: pointer;
+}
+.sound-btn.off { color: var(--muted); }
+
+/* 3D viewer: touch-action none lets 3Dmol use finger drags instead of the page scrolling */
+.af-viewer { position: relative; width: 100%; height: 340px; border: 3px solid var(--border); touch-action: none; }
+.legend-list { list-style: none; padding: 0; margin: 6px 0; font-size: 14px; }
+.legend-list li { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.swatch { width: 16px; height: 16px; flex: 0 0 16px; border: 2px solid var(--bg); }
+
+/* Quiz */
+.xp-row { display: flex; justify-content: space-between; align-items: center; font-family: var(--pixel-font); font-size: 10px; margin-bottom: 6px; }
+.xp-bar { height: 16px; border: 3px solid var(--border); background: var(--bg); margin-bottom: 14px; }
+.xp-fill { height: 100%; background: var(--base-G); transition: width 0.4s steps(8); }
+.quiz-q { font-size: 17px; margin: 6px 0 14px; }
+.quiz-options { display: grid; gap: 10px; }
+.quiz-opt {
+  min-height: 52px; padding: 10px; text-align: left; font-family: var(--mono); font-size: 16px;
+  color: var(--text); background: var(--panel-2); border: 3px solid var(--border); cursor: pointer;
+  box-shadow: 0 4px 0 #0a0c18;
+}
+.quiz-opt:active { transform: translateY(4px); box-shadow: none; }
+.quiz-opt.right { border-color: var(--base-A); color: var(--base-A); }
+.quiz-opt.wrong { border-color: var(--base-T); color: var(--base-T); }
+.quiz-opt:disabled { cursor: default; }

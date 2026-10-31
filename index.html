@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1220">
+  <title>Gene Explorer</title>
+  <meta name="description" content="Gene lookup, CDS, 3D structures and lab calculators for biotechnology students.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="top-bar">
+    <span id="logo" class="logo-icon" aria-hidden="true"></span>
+    <h1 class="pixel">Gene Explorer</h1>
+    <button id="sound-btn" class="sound-btn pixel" type="button"></button>
+    <a href="#about" class="about-link" aria-label="About this app">?</a>
+  </header>
+
+  <main>
+    <!-- EXPLORE: search, results list, and the gene card -->
+    <section id="screen-explore" class="screen">
+      <div id="ex-search-view">
+        <div class="panel">
+          <h2 class="pixel">Find a gene</h2>
+          <form id="ex-form">
+            <label for="ex-q">Gene or protein name</label>
+            <input class="text-input" id="ex-q" type="search" placeholder="insulin, BRCA1, TP53…" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <label for="ex-org">Organism</label>
+            <select class="select" id="ex-org" style="width:100%"></select>
+            <button class="btn" type="submit" style="margin-top:14px">Search</button>
+          </form>
+          <div class="chips" id="ex-chips"></div>
+        </div>
+        <div id="ex-status"></div>
+        <div id="ex-results"></div>
+      </div>
+      <div id="ex-card" hidden></div>
+    </section>
+
+    <!-- TOOLKIT: tile grid, or one calculator when a tile is open -->
+    <section id="screen-toolkit" class="screen">
+      <div id="tool-grid" class="tile-grid"></div>
+      <div id="tool-view" hidden></div>
+    </section>
+
+    <!-- LEARN: codon table + amino acid cards -->
+    <section id="screen-learn" class="screen">
+      <div class="segmented" role="tablist">
+        <button class="seg-btn active" data-learn="codons">Codons</button>
+        <button class="seg-btn" data-learn="amino">Amino acids</button>
+        <button class="seg-btn" data-learn="quiz">Quiz</button>
+      </div>
+      <div id="learn-codons"></div>
+      <div id="learn-amino" hidden></div>
+      <div id="learn-quiz" hidden></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="screen-about" class="screen">
+      <div class="panel">
+        <h2 class="pixel">About</h2>
+        <p>Gene Explorer is a free pocket app for biotechnology students. It was built by Saad, a final-year BS Biotechnology student at Riphah International University, Faisalabad.</p>
+        <p><a href="https://github.com/Saad204-cell" target="_blank" rel="noopener">GitHub: Saad204-cell</a></p>
+        <h3>Data sources</h3>
+        <ul>
+          <li>UniProt: gene and protein facts, protein sequences</li>
+          <li>Ensembl: coding sequences</li>
+          <li>NCBI: coding sequences when Ensembl has none</li>
+          <li>AlphaFold Protein Structure Database: predicted 3D structures</li>
+          <li>3Dmol.js: the 3D structure viewer</li>
+        </ul>
+        <p class="note">Gene lookup needs internet. The Toolkit and Learn tabs use no outside data and work offline once the app has been opened once.</p>
+        <h3>Install on your phone</h3>
+        <button class="btn" id="install-btn" hidden>Install Gene Explorer</button>
+        <p><b>Android (Chrome):</b> tap the Install button above, or the ⋮ menu → "Install app" / "Add to Home screen".</p>
+        <p><b>iPhone (Safari):</b> tap the Share button → "Add to Home Screen".</p>
+        <h3>Credits</h3>
+        <p class="note">Pixel font: Press Start 2P by CodeMan38 (SIL Open Font License).</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom sheet for the "What does this mean?" explanations -->
+  <div id="sheet" class="sheet" hidden>
+    <div class="sheet-box">
+      <h3 id="sheet-title" class="pixel"></h3>
+      <p id="sheet-body"></p>
+      <button class="btn secondary" id="sheet-close">Got it</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Main">
+    <a href="#explore" data-tab="explore"><span class="nav-icon pixel">🧬</span><span class="pixel">Explore</span></a>
+    <a href="#toolkit" data-tab="toolkit"><span class="nav-icon pixel">🧪</span><span class="pixel">Toolkit</span></a>
+    <a href="#learn"   data-tab="learn"><span class="nav-icon pixel">📖</span><span class="pixel">Learn</span></a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script src="js/toolkit.js"></script>
+  <script src="js/learn.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/strand.js"></script>
+  <script src="js/structure.js"></script>
+  <script src="js/explore.js"></script>
+  <script>App.start();</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gene Explorer: offline check</title>
+</head>
+<body>
+  <h1>Offline check</h1>
+  <p>Registers the service worker and lists which app files it has saved for offline use.
+     Open on https or localhost. Then switch off the server (or go offline) and reload
+     index.html: it should still open.</p>
+  <pre id="out">running…</pre>
+  <script>
+    (async () => {
+      const out = document.getElementById('out');
+      try {
+        await navigator.serviceWorker.register('../sw.js', { scope: '../' });
+        await navigator.serviceWorker.ready;   // waits until install (precaching) has finished
+        const keys = await caches.keys();
+        const cache = await caches.open(keys[0]);
+        const saved = (await cache.keys()).map(r => new URL(r.url).pathname);
+        out.textContent = `PASS service worker active\ncache: ${keys.join(', ')}\n${saved.length} files saved:\n${saved.join('\n')}`;
+      } catch (e) {
+        out.textContent = 'FAIL ' + e.message;
+      }
+    })();
+  </script>
+</body>
+</html>
