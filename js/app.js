@@ -5,7 +5,7 @@
 
 const App = {
   // Link to the beta feedback form (Google Form). Leave empty to hide the buttons.
-  FEEDBACK_URL: '',
+  FEEDBACK_URL: 'https://forms.gle/uXk7UNwZFMYmGt6C6',
 
   // Draw a pixel sprite from rows of letters. Each letter maps to a colour,
   // "." is transparent. Returned as an inline SVG string.
