@@ -4,6 +4,9 @@
 // phone's Back gesture moves between screens instead of leaving the app.
 
 const App = {
+  // Link to the beta feedback form (Google Form). Leave empty to hide the buttons.
+  FEEDBACK_URL: '',
+
   // Draw a pixel sprite from rows of letters. Each letter maps to a colour,
   // "." is transparent. Returned as an inline SVG string.
   pixelIcon(rows) {
@@ -26,6 +29,14 @@ const App = {
     if (name === 'toolkit') Toolkit.show(sub);
     if (name === 'explore') Explore.show(sub);
     window.scrollTo(0, 0);
+  },
+
+  // Point every "Send feedback" button at the form, or keep them hidden if there is none.
+  showFeedbackLinks(root) {
+    root.querySelectorAll('.feedback-link').forEach(a => {
+      a.href = App.FEEDBACK_URL;
+      a.hidden = !App.FEEDBACK_URL;
+    });
   },
 
   // ---------- 8-bit sounds ----------
@@ -80,6 +91,7 @@ const App = {
     ]);
     Learn.init();
     Explore.init();
+    App.showFeedbackLinks(document);
 
     let saved = 'off';
     try { saved = localStorage.getItem('ge:sound') || 'off'; } catch (e) { /* storage blocked */ }

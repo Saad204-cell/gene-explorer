@@ -4,7 +4,7 @@
 //
 // IMPORTANT: change CACHE_VERSION every time you publish changed files. That is how
 // phones notice there is a new version and replace their saved copy.
-const CACHE_VERSION = 'gene-explorer-v1';
+const CACHE_VERSION = 'gene-explorer-v2';
 
 // The app's own files, saved when the app is first opened ("precache")
 const APP_FILES = [
@@ -20,6 +20,7 @@ const APP_FILES = [
   './js/structure.js',
   './js/explore.js',
   './assets/fonts/press-start-2p-latin.woff2',
+  './assets/icons/icon-180.png',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/icon-maskable-512.png'

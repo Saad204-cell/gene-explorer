@@ -309,3 +309,7 @@ details summary { cursor: pointer; color: var(--base-C); min-height: 32px; }
 .quiz-opt.right { border-color: var(--base-A); color: var(--base-A); }
 .quiz-opt.wrong { border-color: var(--base-T); color: var(--base-T); }
 .quiz-opt:disabled { cursor: default; }
+
+/* Phase 4: links styled as buttons, and make sure "hidden" always wins */
+a.btn { display: inline-block; text-decoration: none; }
+[hidden] { display: none !important; }

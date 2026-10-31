@@ -136,6 +136,7 @@ const Explore = {
       if (my !== this.token) return;
       document.getElementById('card-body').innerHTML = this.cardHtml(entry);
       this.wirePanels(entry, my);
+      App.showFeedbackLinks(document.getElementById('card-body'));
       this.setProgress(status, 45, 'Finding the coding sequence (Ensembl, then NCBI)…');
 
       // Gene length and CDS are independent, so ask for both at once.
@@ -179,7 +180,7 @@ const Explore = {
     const locs = [...new Set(comment('SUBCELLULAR LOCATION').flatMap(c => (c.subcellularLocations || []).map(l => l.location.value)))];
     const diseases = comment('DISEASE').map(c => c.disease).filter(Boolean);
     const diseaseHtml = diseases.length
-      ? '<ul class="plain-list">' + diseases.slice(0, 5).map(d => `<li><b>${esc(d.diseaseId)}</b>${d.description ? ': ' + esc(d.description.split(/(?<=\.)\s/)[0]) : ''}</li>`).join('')
+      ? '<ul class="plain-list">' + diseases.slice(0, 5).map(d => `<li><b>${esc(d.diseaseId)}</b>${d.description ? ': ' + esc((d.description.match(/^.*?\.(\s|$)/) || [d.description])[0].trim()) : ''}</li>`).join('')
         + '</ul>' + (diseases.length > 5 ? `<p class="note">…and ${diseases.length - 5} more listed in UniProt.</p>` : '')
       : '<p class="note">No linked diseases listed in UniProt.</p>';
 
@@ -213,7 +214,9 @@ const Explore = {
           <h2 class="pixel">3D structure</h2>
           <p class="note">Swipe here or tap 3D to load the AlphaFold model.</p>
         </div></div>
-      </div>`;
+      </div>
+      <p class="note">Something wrong or confusing on this card?</p>
+      <a class="btn secondary feedback-link" target="_blank" rel="noopener" hidden>Send feedback</a>`;
   },
 
   // Tabs <-> swipeable panels. The panels sit side by side in a horizontally scrolling
